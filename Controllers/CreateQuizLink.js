@@ -40,7 +40,7 @@ exports.BuildLink=(data)=>{
         
     
     }
-    form+=`<button type="submit" class="btn btn-default btn-success pull-right">Save Quiz</button></form></div></div></div>`
+    form+=`<button type="submit" class="btn btn-default btn-success pull-right">Submit</button></form></div></div></div>`
     var body=`<div class="container main">
     <div class="row"> 
     <div class="col-md-12 course-filter p-2" >`
