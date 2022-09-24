@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .vl {
+            border-left: 2px solid rgb(117, 21, 16);
+            height: 25px;
+            }
+        body{
+            background-image:url("../images/filter-bg.jpg");
+            background-repeat: true;
+        }    
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 m-auto">
+                <div class="mt-5">
+                    <img src="../images/slogin.png" alt="student login" width="150" height="150" class="d-flex m-auto">
+                </div>
+                <div class="card">
+                    <div class="card-title bg-dark rounded-top">
+                        <h3 class="text-center text-white py-3">Student Login</h3>
+                    </div>
+    
+                    
+                    
+                    <div class="card-body mx-auto">
+    
+                        <form action="/auth" method="get">
+                   
+                            <button class="btn btn-danger  " name="login"><i class="fa fa-google pl-2 pt-1 pr-2 pull-left"></i> <span class="vl pr-3 pull-left"></span><span class="pull-left font-weight-bolder" >Sign in with google</span></button>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

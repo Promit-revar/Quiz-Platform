@@ -1,0 +1,33 @@
+{
+  "name": "quiz-platform",
+  "version": "1.0.0",
+  "description": "Quiz Platform",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Promit-revar/Quiz-Platform.git"
+  },
+  "author": "Promit Revar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Promit-revar/Quiz-Platform/issues"
+  },
+  "homepage": "https://github.com/Promit-revar/Quiz-Platform#readme",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "dotenv": "^16.0.2",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "mongoose": "^6.6.1",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
