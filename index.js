@@ -117,7 +117,7 @@ app.post('/save',async (req,res)=>{
     //console.log(session.user);
     const quiz=await Quiz.create({
         name:data['qname'],
-        link:`http://localhost:${port}/attemptquiz/${data['qname']}`,
+        link:`${process.env.HOST}/attemptquiz/${data['qname']}`,
         data:questions,
         
     });
