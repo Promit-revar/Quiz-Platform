@@ -57,9 +57,16 @@ app.get("/Admin_dashboard",(req,res)=>{
     
     res.render("Admin_Dashboard",{data:session.user});
 });
+app.get("/Student_dashboard",(req,res)=>{
+    res.render("Student_dashboard",{data:session.user});
+});
 app.get('/auth/google/cb',passport.authenticate('google',{failureRedirect: '/',failureMessage:true }),(req,res)=>{
-    
-    res.redirect("/Admin_dashboard");
+    if(session.role=='admin'){
+        res.redirect("/Admin_dashboard");
+    }
+    else{
+        res.redirect("/Student_dashboard");
+    }
 });
 app.get('/login/:role',(req,res)=>{
     session.role=req.params.role;
@@ -134,8 +141,15 @@ app.post('/save',async (req,res)=>{
     res.send(`<h1>link: ${quiz.link}</h1>`);
 
 });
-app.get("/attemptquiz/:name",(req,res)=>{
-    res.render('Quiz_link',{title:req.params.name});
+app.get("/attemptquiz/:name/:studentemail",async (req,res)=>{
+    var email=req.params.studentemail;
+    var result=await User.findOne({email:email});
+    //console.log(result);
+
+    res.render('Quiz_link',{title:req.params.name,profile:result});
+});
+app.post("/submit/:name/:studentemail",async(req,res)=>{
+    res.send("<h1>Your Attempt is saved thank you for taking quiz with us!</h1>");
 });
 
 app.listen(port,()=>console.log(`Server Running on Port ${port}`));

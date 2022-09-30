@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title><%= title %></title>
+        <title>Dashboard</title>
         <!--Icon-->
         <link rel="icon" href="https://process.fs.teachablecdn.com/ADNupMnWyR7kCWRvm76Laz/resize=width:32,height:32/https://file-uploads.teachablecdn.com/96e44e884a324e76ab12eeb08cbc2ba1/7db81cf7f2f343f183db201978e9c146">
         <!-- Bootstrap CDNs -->
@@ -26,14 +26,14 @@
     </head>
 <body>
     <nav class="navbar navbar-dark bg-primary p-0">
-        <a href="#" class="navbar-brand ml-5 " ><img src='./images/Quizer.png' height="65px"></a>
+        <a href="#" class="navbar-brand ml-5 " ><img src="./images/Quizer.png" height="65px"></a>
         <div class="container">
             
         <div></div>
         
             <ul class="nav navbar dropdown ">
                 <li>
-            <button class="bg-primary btn mr-5  mb-0" id="profile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="<%= profile.picture_url %>" alt="profile pic" style="border-radius: 50%;" height="30px">
+            <button class="bg-primary btn mr-5  mb-0" id="profile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="<%= data.picture %>" alt="profile pic" style="border-radius: 50%;" height="30px">
                 <div class="dropdown-menu" id="dropdown" aria-labelledby="profile">
                     <a class="dropdown-item" href="#">Edit Profile</a>
                     <a class="dropdown-item" href="#">Manage Subscriptions</a>
@@ -48,7 +48,46 @@
         </ul>
     </div>
     </nav>
+
+    <div><h1 class="welcome-text">Welcome <%= data.name %>!</h1></div>
+        <div class="row">
+            
+            
+            <div class="col-md-12 course-filter p-2" >
+                
+                    <div class="form-group row">
+                        <div class="col-8 mx-auto ">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">Enter Link</span>
+                                <input class="form-control" id="link" type="text" name="qname" >
+                            </div>
+                          
+                            <div>
+                                <button href="#" id="submit" class="btn btn-success mt-3 pull-right"> Give Test </button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                
+            </div>
+        </div>
+        <script>
+            
+            $(document).ready(function(){
+                $('#submit').click(function(){
+                    var link=$('#link').val();
+                    var email="<%= data.email %>";
+                    var encoded=encodeURIComponent(email);
+                    if(link){
+                        window.open(link+"/"+encoded,"_self");
+                            
+                    }
+                    else{
+                        alert("Please Enter a Valid Link!")
+                    }
+                }); 
+            });
     
-    <%- include(`./partials/${title}.ejs`); %>
+        </script>
 </body>
 </html>

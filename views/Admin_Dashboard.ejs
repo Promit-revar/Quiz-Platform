@@ -76,12 +76,12 @@
                             </option>
                         </select>
                     </div>
-                            Question 1: <input type="text" name="Q1" class="form-control mt-3 input-lg"><br>
+                            Question 1: <input type="text" name="Q1" class="form-control mt-3 input-lg" required><br>
                             <div id="question1">
-                                <div id="a1" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('a',1)">X</button><input type="radio" name="options1"  value="a"><input type="text" name="optionsa1" class="form-control ml-2" required></div>
-                                <div id="b1" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('b',1)">X</button><input type="radio" name="options1"  value="b"><input type="text" name="optionsb1" class="form-control ml-2" required></div>
-                                <div id="c1" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('c',1)">X</button><input type="radio" name="options1"  value="c"><input type="text" name="optionsc1" class="form-control ml-2" required></div>
-                                <div id="d1" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('d',1)">X</button><input type="radio" name="options1"  value="d"><input type="text" name="optionsd1" class="form-control ml-2" required></div>
+                                <div id="a1" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('a',1)">X</button><input type="radio" name="options1"  value="a" required><input type="text" name="optionsa1" class="form-control ml-2" required></div>
+                                <div id="b1" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('b',1)">X</button><input type="radio" name="options1"  value="b" required><input type="text" name="optionsb1" class="form-control ml-2" required></div>
+                                <div id="c1" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('c',1)">X</button><input type="radio" name="options1"  value="c" required><input type="text" name="optionsc1" class="form-control ml-2" required></div>
+                                <div id="d1" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('d',1)">X</button><input type="radio" name="options1"  value="d" required><input type="text" name="optionsd1" class="form-control ml-2" required></div>
                             </div>
                             <div id="1"><button class="btn btn-default btn-primary"  onclick="addComponent(1)"> Add</button></div> 
                         </li>
@@ -131,10 +131,10 @@
                             </div>
                         </div>
                         `;
-            var mcqComponent=`<div id="a${id}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('a',1)">X</button><input type="radio" name="options${id}"  value="a"><input type="text" name="optionsa${id}" class="form-control ml-2" required></div>
-                        <div id="b${id}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('b',1)">X</button><input type="radio" name="options${id}"  value="b"><input type="text" name="optionsb${id}" class="form-control ml-2" required></div>
-                        <div id="c${id}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('c',1)">X</button><input type="radio" name="options${id}"  value="c"><input type="text" name="optionsc${id}" class="form-control ml-2" required></div>
-                        <div id="d${id}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('d',1)">X</button><input type="radio" name="options${id}"  value="d"><input type="text" name="optionsd${id}" class="form-control ml-2" required></div>`;
+            var mcqComponent=`<div id="a${id}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('a',1)">X</button><input type="radio" name="options${id}" value="a" required><input type="text" name="optionsa${id}" class="form-control ml-2" required></div>
+                        <div id="b${id}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('b',1)">X</button><input type="radio" name="options${id}"  value="b" required><input type="text" name="optionsb${id}" class="form-control ml-2" required></div>
+                        <div id="c${id}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('c',1)">X</button><input type="radio" name="options${id}"  value="c" required><input type="text" name="optionsc${id}" class="form-control ml-2" required></div>
+                        <div id="d${id}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('d',1)">X</button><input type="radio" name="options${id}"  value="d" required><input type="text" name="optionsd${id}" class="form-control ml-2" required></div>`;
             if(this.value=='short'){
             document.getElementById("question"+id).innerHTML=shortComponent;
         
@@ -144,9 +144,56 @@
             }
            
         });
+         $(document).delegate('div','mouseenter',function(){
+            var id=$(this).attr('id');
+
+            if(id &&(id.charAt(0)=='a' || id.charAt(0)=='c' || id.charAt(0)=='b'  || id.charAt(0)=='d' )){
+
+            //console.log(id);
+            
+            //console.log('hovering')
+            
+            var shuffle=document.createElement('div');
+            shuffle.innerHTML=`<button style="border-radius:50%" id="swap${id}" type="button" class="btn btn-default btn-secondary pull-right btn-sm ml-2 ")"><b>^</b></button>`;
+            document.getElementById(id).appendChild(shuffle);
+           $(document).delegate(`#swap${id}`,'click',function(){
+               
+                var orderalpha=['a'+id.substr(1),'b'+id.substr(1),'c'+id.substr(1),'d'+id.substr(1)];
+                if(orderalpha.indexOf(id)-1>=0){
+                    if($('#'+orderalpha[orderalpha.indexOf(id)-1]).length){
+                        
+                        let previousId=orderalpha[orderalpha.indexOf(id)-1];
+                        let previousVal=$(`input[name="options${previousId}"]`).val();
+                        let thisVal=$(`input[name="options${id}"]`).val();
+                        setTimeout(()=>{
+                        $(`input[name="options${previousId}"]`).val(thisVal);
+                        $(`input[name="options${id}"]`).val(previousVal);
+                        //console.log("swapped",previousVal,thisVal,id)
+                        },200);
+                        
+                    }
+                }
+                return;
+
+           });
+        
+            
+        }
+        });
+        $(document).delegate('div','mouseleave',function(){
+                //console.log('hovering')
+                var id=$(this).attr('id');
+                if(id &&(id.charAt(0)=='a' || id.charAt(0)=='c' || id.charAt(0)=='b'  || id.charAt(0)=='d' )){
+
+
+                var option=document.getElementById(id);
+                option.removeChild(option.lastChild);
+                }
+            });
+        
         
     });
-
+    
     function removeOptions(id,ques){
        console.log(ques,id,id+ques.toString());
        var arr=['a','b','c','d'];
@@ -183,15 +230,15 @@
                     </select>
                 </div>
                 
-                 Question ${ques+1}: <input type="text" name="Q${ques+1}" class="form-control mt-3 input-lg"><br>
+                 Question ${ques+1}: <input type="text" name="Q${ques+1}" class="form-control mt-3 input-lg" required><br>
                  <div id="question${ques+1}">
-                        <div id="a${ques+1}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('a',${ques+1})">X</button><input type="radio" name="options${ques+1}"  value="a"><input type="text" name="optionsa${ques+1}" class="form-control ml-2" required></div>
-                        <div id="b${ques+1}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('b',${ques+1})">X</button><input type="radio" name="options${ques+1}"  value="b"><input type="text" name="optionsb${ques+1}" class="form-control ml-2" required></div>
-                        <div id="c${ques+1}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('c',${ques+1})">X</button><input type="radio" name="options${ques+1}"  value="c"><input type="text" name="optionsc${ques+1}" class="form-control ml-2" required></div>
-                        <div id="d${ques+1}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('d',${ques+1})">X</button><input type="radio" name="options${ques+1}"  value="d"><input type="text" name="optionsd${ques+1}" class="form-control ml-2" required></div>
+                        <div id="a${ques+1}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('a',${ques+1})">X</button><input type="radio" name="options${ques+1}"  value="a" required><input type="text" name="optionsa${ques+1}" class="form-control ml-2" required></div>
+                        <div id="b${ques+1}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('b',${ques+1})">X</button><input type="radio" name="options${ques+1}"  value="b" required><input type="text" name="optionsb${ques+1}" class="form-control ml-2" required></div>
+                        <div id="c${ques+1}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('c',${ques+1})">X</button><input type="radio" name="options${ques+1}"  value="c" required><input type="text" name="optionsc${ques+1}" class="form-control ml-2" required></div>
+                        <div id="d${ques+1}" class="input-group-prepend m-3"><button class="btn btn-default btn-danger m-2" onclick="removeOptions('d',${ques+1})">X</button><input type="radio" name="options${ques+1}"  value="d" required><input type="text" name="optionsd${ques+1}" class="form-control ml-2" required></div>
                     </div>
                         <div id=${ques+1}><button class="btn btn-default btn-primary"  onclick="addComponent(${ques+1})"> Add</button></div>` 
-        console.log(component);        
+        //console.log(component);        
         document.getElementById('quiz').appendChild(component);
         document.getElementById(`${ques}`).remove();
         

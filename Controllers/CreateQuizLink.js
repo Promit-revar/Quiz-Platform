@@ -2,7 +2,7 @@ exports.BuildLink=(data)=>{
     
     var title=data['name'];
     var questions=data['data'];
-    var form=`<form method="post" action="/save"><div class="form-group row">
+    var form=`<form method="post" action="/submit"><div class="form-group row">
     <div class="col-xs-2 mx-auto">
       
       <p class="form-control" id="ex1" type="text" >${data['name']}</p>
