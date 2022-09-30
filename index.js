@@ -58,7 +58,7 @@ app.get("/Admin_dashboard",(req,res)=>{
     res.render("Admin_Dashboard",{data:session.user});
 });
 app.get("/Student_dashboard",(req,res)=>{
-    res.render("Student_dashboard",{data:session.user});
+    res.render("Student_Dashboard",{data:session.user});
 });
 app.get('/auth/google/cb',passport.authenticate('google',{failureRedirect: '/',failureMessage:true }),(req,res)=>{
     if(session.role=='admin'){
