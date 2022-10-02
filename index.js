@@ -144,7 +144,7 @@ app.post('/save',async (req,res)=>{
     var code=BuildLink(quiz);
     //console.log(code);
     //console.log()
-    fs.writeFileSync(`./views/partials/${data['qname']}.ejs`,code,err=>{
+    fs.writeFileSync(`./views/${data['qname']}.ejs`,code,err=>{
         if(err){
             console.log(err);
         }
