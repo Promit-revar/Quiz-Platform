@@ -8,7 +8,7 @@ const QuestionSchema=new mongoose.Schema({
     },
     correct: {
 		type: String,
-		default: undefined
+		
 	},
     options:{
         type:Array,
@@ -17,7 +17,11 @@ const QuestionSchema=new mongoose.Schema({
     charSize:{
         min:Number,
         max:Number
+    },
+    pts:{
+        type:Number
     }
+    
 });
 const QuizSchema=new mongoose.Schema({
     name: String,

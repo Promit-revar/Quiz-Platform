@@ -9,6 +9,7 @@ require('dotenv').config();
 const port=process.env.PORT || 8000;
 require("./config/database");
 const User=require('./models/User');
+const Attempt=require('./models/Result');
 const {Question,Quiz}=require('./models/Question');
 const {BuildLink}=require('./Controllers/CreateQuizLink');
 app.set('view engine','ejs');
@@ -27,14 +28,23 @@ passport.use(new googleStrategy({
     session.user=profile['_json'];
     
     try{
-		
-		const user =await User.findOneAndUpdate({
+		const checkuser=await User.findOne({email:data['email']});
+        if(!checkuser){
+		const user =await User.create({
 			name:data['name'],
             email:data['email'],
             role:session.role,
             picture_url:data['picture']
 		});
+        user.save();
+        }
+        else{
+            if(checkuser.role=="student" && checkuser.role!=session.role){
+                session.role=checkuser.role;
+            }
+        }
         //console.log(user);
+        
         
 	} catch(err){
 		console.log(err);
@@ -92,6 +102,7 @@ app.post('/save',async (req,res)=>{
             var charSize={'max':undefined,'min':undefined};
             var options=new Array();
             var correct=undefined;
+            var pts=data['pts'+i.toString()];
             if(qtype=="MCQ"){
                 correct=data["options"+i.toString()];
                 var alpha=['a','b','c','d'];
@@ -114,7 +125,8 @@ app.post('/save',async (req,res)=>{
                 qtype:qtype,
                 correct:correct,
                 options:options,
-                charSize:charSize
+                charSize:charSize,
+                pts:pts
             });
             questions.push(ques);
 
@@ -144,12 +156,53 @@ app.post('/save',async (req,res)=>{
 app.get("/attemptquiz/:name/:studentemail",async (req,res)=>{
     var email=req.params.studentemail;
     var result=await User.findOne({email:email});
-    //console.log(result);
+    console.log(result);
 
     res.render('Quiz_link',{title:req.params.name,profile:result});
 });
 app.post("/submit/:name/:studentemail",async(req,res)=>{
-    res.send("<h1>Your Attempt is saved thank you for taking quiz with us!</h1>");
+    var answers=new Array();
+    const attempted=await Attempt.Result.findOne({QuizName:req.params.name,StudentEmail:req.params.studentemail});
+    if(attempted){
+        res.status(401).send({success:false,error:"You have already Attempted this quiz!"});
+    }
+    else{
+    const correctAnswers=await Quiz.findOne({name:req.params.name});
+    var marks=0,total=0;
+    for(var i=0;i<req.body.QT.length;i++){
+        var correct=undefined;
+        total+=correctAnswers.data[i].pts;
+        if(correctAnswers.data[i].qtype=="MCQ")
+            var correct=correctAnswers.data[i].correct==req.body["answer"+(i+1).toString()];
+        if(correct){
+            marks+=correctAnswers.data[i].pts;
+            
+        }
+        var ans=new Attempt.Answer({
+            answer:req.body["answer"+(i+1).toString()],
+            qtype:req.body.QT[i],
+            qnumber:i+1,
+            correct: correct
+        });
+        
+        
+        
+        answers.push(ans);
+
+    }
+    //console.log(answers)
+    
+    const result=await Attempt.Result.create({
+        QuizName:req.params.name,
+        StudentEmail:req.params.studentemail,
+        QuizLink: process.env.HOST+req.params.name,
+        Answers: answers,
+        Score:marks,
+        Total: total
+    });
+    result.save();
+    res.status(200).send({success:true,message:`Your Response for ${req.params.name} has been submitted successfully`, score:`${result.Score}/${result.Total}`});
+    }
 });
 
 app.listen(port,()=>console.log(`Server Running on Port ${port}`));

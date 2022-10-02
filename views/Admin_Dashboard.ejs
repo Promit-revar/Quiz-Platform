@@ -65,7 +65,11 @@
                     
                     <ul style="list-style:none;" id="quiz">
                         <li>
-                    <div class="btn-group pull-right">
+                        <div>
+                            <input type="number" name="pts1" class="mb-3 pull-right ml-5 form-control col-1" id="pts1" placeholder="marks" min=0 required>
+                        </div>
+                    <div class="btn-group pull-right mr-5">
+                        
                         <div class="filter-label">Question Type</div>
                         <select class="ml-0 btn btn-default btn-lg btn-course-filter dropdown-toggle p-0" name="QT1" id="QT1"> 
                             <option value="MCQ">
@@ -215,7 +219,11 @@
     function addComponent(ques){
         
         var component=document.createElement('div');
-        component.innerHTML=`<li><div class="btn-group pull-right">
+        component.innerHTML=`<li>
+            <div>
+                <input type="number" min=0 name="pts${ques+1}" class="mb-3 pull-right ml-5 form-control col-1" id="pts${ques+1}" placeholder="marks" required>
+            </div>
+            <div class="btn-group pull-right">
                     <div class="filter-label">Question Type</div>
                     <select class="ml-0 btn btn-default btn-lg btn-course-filter dropdown-toggle p-0" name="QT${ques+1}" id="QT${ques+1}" >
                         
