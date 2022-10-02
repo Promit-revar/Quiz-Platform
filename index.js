@@ -156,7 +156,7 @@ app.post('/save',async (req,res)=>{
 app.get("/attemptquiz/:name/:studentemail",async (req,res)=>{
     var email=req.params.studentemail;
     var result=await User.findOne({email:email});
-    console.log(result);
+   //console.log(result);
 
     res.render('Quiz_link',{title:req.params.name,profile:result});
 });
@@ -169,6 +169,7 @@ app.post("/submit/:name/:studentemail",async(req,res)=>{
     else{
     const correctAnswers=await Quiz.findOne({name:req.params.name});
     var marks=0,total=0;
+    
     for(var i=0;i<req.body.QT.length;i++){
         var correct=undefined;
         total+=correctAnswers.data[i].pts;
