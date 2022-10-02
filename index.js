@@ -162,6 +162,7 @@ app.get("/attemptquiz/:name/:studentemail",async (req,res)=>{
 });
 app.post("/submit/:name/:studentemail",async(req,res)=>{
     var answers=new Array();
+    
     const attempted=await Attempt.Result.findOne({QuizName:req.params.name,StudentEmail:req.params.studentemail});
     if(attempted){
         res.status(401).send({success:false,error:"You have already Attempted this quiz!"});
@@ -169,14 +170,18 @@ app.post("/submit/:name/:studentemail",async(req,res)=>{
     else{
     const correctAnswers=await Quiz.findOne({name:req.params.name});
     var marks=0,total=0;
-    
-    for(var i=0;i<req.body.QT.length;i++){
+    //console.log(correctAnswers);
+    var size=1;
+    if(Array.isArray(req.body.QT)){
+        size=req.body.QT.length;
+    }
+    for(var i=0;i<size;i++){
         var correct=undefined;
-        total+=correctAnswers.data[i].pts;
+        total+=correctAnswers.data[i]['pts'];
         if(correctAnswers.data[i].qtype=="MCQ")
             var correct=correctAnswers.data[i].correct==req.body["answer"+(i+1).toString()];
         if(correct){
-            marks+=correctAnswers.data[i].pts;
+            marks+=correctAnswers.data[i]['pts'];
             
         }
         var ans=new Attempt.Answer({
@@ -191,6 +196,8 @@ app.post("/submit/:name/:studentemail",async(req,res)=>{
         answers.push(ans);
 
     }
+    
+    
     //console.log(answers)
     
     const result=await Attempt.Result.create({
