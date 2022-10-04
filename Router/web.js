@@ -97,7 +97,7 @@ router.post('/save',async (req,res)=>{
     var code=BuildLink(quiz);
     //console.log(code);
     //console.log()
-    fs.writeFileSync(path.join(__dirname,`../views/${data['qname']}.ejs`),code,err=>{
+    fs.writeFileSync(path.join(__dirname,`../views/partials/${data['qname']}.ejs`),code,err=>{
         if(err){
             console.log(err);
         }
