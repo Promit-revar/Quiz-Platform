@@ -28,6 +28,11 @@ const QuizSchema=new mongoose.Schema({
     link:String,
     data:[QuestionSchema],
     email: String,
+    Date: {
+        type:Date,
+        auto: true,
+        default: Date.now
+    }
    
 });
 module.exports = {

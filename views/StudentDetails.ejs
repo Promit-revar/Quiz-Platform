@@ -1,0 +1,81 @@
+<%- include('./components/nav.ejs',{data:data,title:"dashboard"}) %>
+<div class="container main mt-3">
+    <div class="card">
+    <div class="row">
+            
+        <div class="col-0"><img src="<%= student.picture_url %>" style="border-radius: 50%;" class="p-3"></div>   
+        <div class=" col" >
+
+            Name: <%= student.name %>
+            <br>
+            Email: <%= student.email %>
+            <br>
+            Marks Scored: <%= result.Score %> / <%= result.Total %>
+            <br>
+        </div>
+    </div>
+    
+</div>
+<label class="h4 mt-3"> Answers</label>
+    <div class="card">
+        <div class="row">
+            <div class="col card-body">
+                <ul style="list-style: none;" id="Answerlist">
+
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    var answers=<%- JSON.stringify(result) %>;
+    console.log(answers);
+    var quiz=<%- JSON.stringify(quiz) %>;
+    $(document).ready(()=>{
+        for(var i=0;i<answers.Answers.length;i++){
+        var listitem=document.createElement('li');
+       
+        
+        
+        if(quiz.data[i].qtype=="MCQ"){
+            if(quiz.data[i].correct==answers.Answers[i].answer){
+                listitem.innerHTML=`<div class="row"><div class="col"><b>Question ${answers.Answers[i].qnumber} </b> &nbsp;&nbsp;${quiz.data[i].question}</div><div class="col-2">Marks: ${quiz.data[i].pts}/${quiz.data[i].pts}</div></div>`;
+            }
+            else{
+                listitem.innerHTML=`<div class="row"><div class="col"><b>Question ${answers.Answers[i].qnumber} </b> &nbsp;&nbsp;${quiz.data[i].question}</div><div class="col-2">Marks: 0/${quiz.data[i].pts}</div></div>`;
+            }
+        for(var j=0;j<quiz.data[i].options.length;j++){
+        if(quiz.data[i].options[j][quiz.data[i].correct ]){
+            if(answers.Answers[i].answer==quiz.data[i].correct){
+                listitem.innerHTML+=`<div style="background-color:MediumSeaGreen"><p><input type="checkbox" checked="checked" disabled>${Object.entries(quiz.data[i].options[j])[0][1]} </p></div>`;
+            }
+            else{
+                listitem.innerHTML+=`<div style="background-color:MediumSeaGreen"><p><input type="checkbox" disabled>${Object.entries(quiz.data[i].options[j])[0][1]} </p></div>`;
+            }
+            
+        }
+        else{
+            if(Object.entries(quiz.data[i].options[j])[0][0]==answers.Answers[i].answer){
+                listitem.innerHTML+=`<div style="background-color:tomato"><p><input type="checkbox" checked="checked" disabled>${Object.entries(quiz.data[i].options[j])[0][1]} </p></div>`;
+            }
+            else{
+                listitem.innerHTML+=`<div><p><input type="checkbox"  disabled>${Object.entries(quiz.data[i].options[j])[0][1]} </p></div>`;
+            }
+        }
+        //console.log(quiz.data[i].options[j]);
+        }
+    }
+    else{
+        listitem.innerHTML=`<div class="row"><div class="col"><b>Question ${answers.Answers[i].qnumber} </b> &nbsp;&nbsp;${quiz.data[i].question}</div><div class="col-2">Marks: --/${quiz.data[i].pts}</div></div>`;
+            
+        listitem.innerHTML+=`<p class="mt-3"><b>Answer:</b> &nbsp;&nbsp;${answers.Answers[i].answer}</p>`;
+    }
+    listitem.innerHTML+="<br><br>"
+    document.getElementById("Answerlist").append(listitem);
+    }
+    
+
+    });
+</script>
+<%- include('./components/footer.ejs') %>

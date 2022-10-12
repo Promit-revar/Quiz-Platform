@@ -13,6 +13,7 @@ const ResultSchema=mongoose.Schema({
     StudentEmail:{
         type: String
     },
+    QuizId: String,
     QuizLink:String,
     Answers:[AnswerSchema],
     Score: {

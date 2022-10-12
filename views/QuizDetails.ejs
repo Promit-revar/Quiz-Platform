@@ -1,0 +1,54 @@
+<%- include('./components/nav.ejs',{data:data,title:details[0].QuizName}) %>
+<div class="container main">
+    <div><h1 class="welcome-text text-primary"><%= details[0].QuizName %></h1></div>
+    <div class="row">
+            
+            
+        <div class="btn-group col">
+            <form action="/deletequiz/<%= details[0].QuizName %>" method="get">
+            <button class="btn btn-default btn-danger" type="submit"> Delete Quiz</button>
+            </form>
+        </div>
+
+<div class="col-md-12 mt-3">
+    <table class="table table-hover" id="detailTable">
+        <thead class="thead-dark ">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email ID</th>
+            <th scope="col">Marks Scored</th>
+            <th scope="col">Total Marks</th>
+            
+          </tr>
+        </thead>
+        
+      </table>
+        
+</div>
+</div>
+</div>
+<script>
+    $(document).ready(()=>{
+        var quizes= <%- JSON.stringify(details) %>;
+        for(var i=0;i<quizes.length;i++){
+            var tbody=document.createElement('tbody');
+            var encoded=encodeURIComponent(quizes[i].StudentEmail);
+            tbody.innerHTML=`<tr  class="clickable text-center" 
+               onclick="window.location='/studentDetails/${encoded}/${quizes[i].QuizName}'" style="cursor:pointer;">
+                                
+                                    <th scope="row">${i+1}</th>
+                                    <td> ${quizes[i].StudentEmail}</td>
+                                    <td>${quizes[i].StudentEmail}</td>
+                                    <td>${quizes[i].Score}</td>
+                                    <td>${quizes[i].Total}</td>
+                                
+                               
+                            </tr> `;
+            
+            document.getElementById('detailTable').append(tbody);
+        }
+        
+    });
+</script>
+<%- include('./components/footer.ejs',{data:data}) %>

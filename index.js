@@ -4,7 +4,7 @@ const session = require('express-session');
 const app=express();
 require('dotenv').config();
 require("./config/database");
-const router=require('./Router/web');
+const router=require('./Routes/web');
 const passport=require("passport");
 const port=process.env.PORT || 8000;
 require("./Controllers/AuthController");

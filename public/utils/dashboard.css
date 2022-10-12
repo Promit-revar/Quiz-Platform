@@ -65,10 +65,6 @@ a:hover{
     background-color: #989898;
     color: #f8f8f8 !important;
 }
-.footer-link{
-    color: #fff !important;
-    text-transform: uppercase;
-}
 .expand_caret {
     transform: scale(1.6);
     margin-left: 8px;

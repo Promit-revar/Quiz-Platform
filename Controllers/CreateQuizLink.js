@@ -3,7 +3,7 @@ exports.BuildLink=(data)=>{
     var title=data['name'];
     var questions=data['data'];
     //console.log(questions);
-    var form=`<form method="post" action="/submit/${data['name']}/<%= profile.email %>"><div class="form-group row">
+    var form=`<form method="post" action="/submit/${data['_id'].toString()}/<%= profile.email %>"><div class="form-group row">
     <div class="col-xs-2 mx-auto">
       
       <p class="form-control" id="ex1" type="text" >${data['name']}</p>
