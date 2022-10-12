@@ -132,10 +132,10 @@ router.post('/save',async (req,res)=>{
 });
 router.get("/attemptquiz/:name/:studentemail",async (req,res)=>{
     var email=req.params.studentemail;
-    var result=await User.findOne({email:email});
-   //console.log(result);
+    
+  
 
-    res.render('Quiz_link',{title:req.params.name,profile:result});
+    res.render('Quiz_link',{title:req.params.name,profile:session.user});
 });
 router.post("/submit/:name/:studentemail",async(req,res)=>{
     var answers=new Array();
