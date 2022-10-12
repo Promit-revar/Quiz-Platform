@@ -39,7 +39,7 @@ router.get("/Student_dashboard",(req,res)=>{
 });
 router.get("/quizDetails/:quizname",async (req,res)=>{
     const results=await Attempt.Result.find({QuizName:req.params.quizname});
-    res.render("QuizDetails",{data:session.user,details:results});
+    res.render("QuizDetails",{data:session.user,details:results,quizname:req.params.quizname});
 });
 router.get('/auth/google/cb',passport.authenticate('google',{failureRedirect: '/',failureMessage:true }),(req,res)=>{
     if(session.role=='admin'){
