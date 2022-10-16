@@ -86,7 +86,7 @@ router.post('/save',async (req,res)=>{
             var charSize={'max':undefined,'min':undefined};
             var options=new Array();
             var correct=undefined;
-            var pts=data['pts'+i.toString()];
+            var pts=formData['pts'+i.toString()];
             if(qtype=="MCQ"){
                 correct=formData["options"+i.toString()];
                 var alpha=['a','b','c','d'];
@@ -152,7 +152,7 @@ router.get("/attemptquiz/:name/:studentemail",async (req,res)=>{
 router.post("/submit/:name/:studentemail",async(req,res)=>{
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
     var answers=new Array();
-    //console.log(userData.passport.user._json);
+    console.log(userData.passport.user._json);
     try{
     const attempted=await Attempt.Result.findOne({$and:[{QuizId:req.params.name},{StudentEmail:req.params.studentemail}]});
     if(attempted){
