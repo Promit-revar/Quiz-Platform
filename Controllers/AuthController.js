@@ -1,4 +1,3 @@
-const session = require('express-session');
 const passport=require('passport');
 const User=require('../models/User');
 const googleStrategy=require('passport-google-oauth20');
@@ -9,10 +8,10 @@ passport.use(new googleStrategy({
 
 },async (access_token,refresh_token,profile,done)=>{
     data=profile['_json'];
-    //console.log(session.role);
-    data.role=session.role;
+    //console.log(req.headers);
+    data.role=localStorage.getItem("role");
     
-    session.role=null;
+    
     try{
 		const checkuser=await User.findOne({email:data['email']});
         if(!checkuser){

@@ -1,6 +1,6 @@
 const express=require("express");
+const LocalStorage=require("node-localstorage").LocalStorage;
 const Attempt=require('../models/Result');
-const session = require('express-session');
 const fs=require("fs");
 const {Question,Quiz}=require('../models/Question');
 const {BuildLink}=require('../Controllers/CreateQuizLink');
@@ -9,9 +9,13 @@ const path=require("path");
 const User=require('../models/User');
 const router=express.Router();
 var mongoose = require('mongoose');
+localStorage = new LocalStorage('./scratch');
 
-
-router.get('/auth/:role',passport.authenticate('google',{
+router.get('/auth/:role',(req,res,next)=>{
+    //console.log(req.params.role);
+    localStorage.setItem("role",req.params.role);
+    next();
+},passport.authenticate('google',{
 
     scope:["email","profile"]
 }));
@@ -58,7 +62,7 @@ router.get('/auth/google/cb',passport.authenticate('google',{failureRedirect: '/
     }
 });
 router.get('/login/:role',(req,res)=>{
-    session.role=req.params.role;
+    // session.role=req.params.role;
     
     //console.log(session.role);
     //userData.passport.user._json['role']=req.params.role;
@@ -234,6 +238,7 @@ router.get("/deletequiz/:qname",async (req,res)=>{
 });
 router.get("/logout",(req,res)=>{
     req.session.destroy();
+    localStorage.clear();
     res.redirect("/");
 });
 module.exports=router;
