@@ -8,25 +8,28 @@ passport.use(new googleStrategy({
     callbackURL: "/auth/google/cb"
 
 },async (access_token,refresh_token,profile,done)=>{
-    data=profile['_json']
-    session.user=profile['_json'];
+    data=profile['_json'];
+    //console.log(session.role);
+    data.role=session.role;
     
+    session.role=null;
     try{
 		const checkuser=await User.findOne({email:data['email']});
         if(!checkuser){
 		const user =await User.create({
 			name:data['name'],
             email:data['email'],
-            role:session.role,
+            role:data.role,
             picture_url:data['picture']
 		});
         user.save();
         }
         else{
-            if(checkuser.role=="student" && checkuser.role!=session.role){
-                session.role=checkuser.role;
+            if(checkuser.role=="student" && checkuser.role!=data.role){
+                data.role=checkuser.role;
             }
         }
+        profile['_json']=data;
         //console.log(user);
         
         
