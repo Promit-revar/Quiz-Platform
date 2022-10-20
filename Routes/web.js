@@ -20,8 +20,12 @@ router.get('/auth/:role',(req,res,next)=>{
     scope:["email","profile"]
 }));
 router.get("/Admin_dashboard",async (req,res)=>{
+    ////console.log(JSON.parse(req.sessionStore.sessions[req.sessionID]).passport.user);
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
-    //console.log(userData.passport.user._json);    
+    //console.log(userData.passport.user._json);
+    if(!userData.passport){
+        res.redirect("/");
+    }    
     const quizes=await Quiz.find({email:userData.passport.user._json.email});
     
     var quizData=new Array();
@@ -36,29 +40,46 @@ router.get("/Admin_dashboard",async (req,res)=>{
     res.render("Admin_Dashboard",{data:userData.passport.user._json,quizes:quizData});
 });
 router.get("/createQuiz",(req,res)=>{
+    //console.log(JSON.parse(req.sessionStore.sessions[req.sessionID]).passport.user);
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
+    if(!userData.passport){
+        res.redirect("/");
+    } 
     res.render("Create_quiz",{data:userData.passport.user._json});
 })
 router.get("/Student_dashboard",(req,res)=>{
+    //console.log(JSON.parse(req.sessionStore.sessions[req.sessionID]).passport.user);
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
     res.render("Student_Dashboard",{data:userData.passport.user._json});
 });
 router.get("/quizDetails/:quizname",async (req,res)=>{
+    //console.log(JSON.parse(req.sessionStore.sessions[req.sessionID]).passport.user);
     const results=await Attempt.Result.find({QuizName:req.params.quizname});
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
+    //console.log(userData.passport);
+    if(!userData.passport){
+        
+        res.redirect("/");
+    }else{  
     res.render("QuizDetails",{data:userData.passport.user._json,details:results,quizname:req.params.quizname});
+    }
 });
 router.get('/auth/google/cb',passport.authenticate('google',{failureRedirect: '/',failureMessage:true }),(req,res)=>{
     
     
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
     //console.log(userData.passport.user._json);
-    if(userData.passport.user._json.role=='admin'){
-        
-        res.redirect("/Admin_dashboard");
+    if(!userData.passport){
+        res.redirect("/");
     }
-    else{
-        res.redirect("/Student_dashboard");
+    else{ 
+        if(userData.passport.user._json.role=='admin'){
+            
+            res.redirect("/Admin_dashboard");
+        }
+        else{
+            res.redirect("/Student_dashboard");
+        }
     }
 });
 router.get('/login/:role',(req,res)=>{
@@ -79,8 +100,13 @@ router.get('/',(req,res)=>{
 });
 
 router.post('/save',async (req,res)=>{
+    ////console.log(JSON.parse(req.sessionStore.sessions[req.sessionID]).passport.user);
     var formData=req.body;
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
+    if(!userData.passport){
+        res.redirect("/");
+    }
+    else{ 
     var questions=new Array();
     for(var i=1;i<1000;i++){
         if(formData['QT'+i.toString()]){
@@ -143,20 +169,26 @@ router.post('/save',async (req,res)=>{
     });
     
     res.send(`<h1>link: ${quiz.link}</h1>`);
-
+    }
 });
 router.get("/attemptquiz/:name/:studentemail",async (req,res)=>{
+    //console.log(JSON.parse(req.sessionStore.sessions[req.sessionID]).passport.user);
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
-    var email=req.params.studentemail;
-    
-  
-
-    res.render('Quiz_link',{title:req.params.name,profile:userData.passport.user._json});
+    if(!userData.passport){
+        res.redirect('/');
+    }
+    else{
+        var email=req.params.studentemail;
+        res.render('Quiz_link',{title:req.params.name,profile:userData.passport.user._json});
+    }
 });
 router.post("/submit/:name/:studentemail",async(req,res)=>{
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
     var answers=new Array();
-    console.log(userData.passport.user._json);
+    if(!userData.passport){
+        res.redirect('/');
+    }else{ 
+    //console.log(userData.passport.user._json);
     try{
     const attempted=await Attempt.Result.findOne({$and:[{QuizId:req.params.name},{StudentEmail:req.params.studentemail}]});
     if(attempted){
@@ -217,24 +249,35 @@ router.post("/submit/:name/:studentemail",async(req,res)=>{
         console.log(err);
         res.status(500).sendFile(path.join(__dirname,"../public/Error.html"));
     }
+    }
 });
 router.get("/studentDetails/:studentEmail/:quizname",async (req,res)=>{
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
+    if(!userData.passport){
+        res.redirect('/');
+    }
+    else{ 
     const studentdata=await User.findOne({email:req.params.studentEmail});
     const result=await Attempt.Result.findOne({$and:[{QuizName:req.params.quizname},{StudentEmail:req.params.studentEmail}]});
     const quiz=await Quiz.findOne({name:req.params.quizname});
     //console.log(result,req.params);
     res.render("StudentDetails",{data:userData.passport.user._json,student:studentdata,title:studentdata.name,result:result,quiz:quiz});
+    }
 })
 router.get("/deletequiz/:qname",async (req,res)=>{
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
     //console.log(req.params.qname,userData.passport.user._json.email);
+    if(!userData.passport){
+        res.redirect('/');
+    }
+    else{ 
     const data=await Quiz.findOne({$and:[{name:req.params.qname},{email:userData.passport.user._json.email}]});
     //console.log(data);
     const StudentResults= await Attempt.Result.deleteMany({QuizId:data._id.toString()})
     const result=await Quiz.deleteOne({$and:[{name:req.params.qname},{email:userData.passport.user._json.email}]});
     //console.log(result,StudentResults);
     res.redirect("/Admin_dashboard");
+    }
 });
 router.get("/logout",(req,res)=>{
     req.session.destroy();
