@@ -32,9 +32,9 @@ router.get("/Admin_dashboard",async (req,res)=>{
     for(var i=0;i<quizes.length;i++){
         var date=quizes[i].Date.getDate().toString()+"/"+quizes[i].Date.getMonth().toString()+"/"+quizes[i].Date.getFullYear().toString();
         var time=quizes[i].Date.getHours().toString()+":"+quizes[i].Date.getMinutes().toString()+":"+quizes[i].Date.getSeconds().toString();
-        var attempted=await Attempt.Result.countDocuments({QuizName:quizes[i].name})
-        // console.log(attempted);
-        quizData.push({name:quizes[i].name,link:quizes[i].link,date:date,time:time,attempted:attempted});
+        var attempted=await Attempt.Result.countDocuments({QuizId:quizes[i]._id})
+        //console.log(attempted);
+        quizData.push({name:quizes[i].name,link:quizes[i].link,date:date,time:time,attempted:attempted,id:quizes[i]._id.toString()});
     }
     //console.log(quizData);
     res.render("Admin_Dashboard",{data:userData.passport.user._json,quizes:quizData});
@@ -52,9 +52,9 @@ router.get("/Student_dashboard",(req,res)=>{
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
     res.render("Student_Dashboard",{data:userData.passport.user._json});
 });
-router.get("/quizDetails/:quizname",async (req,res)=>{
+router.get("/quizDetails/:quizid",async (req,res)=>{
     //console.log(JSON.parse(req.sessionStore.sessions[req.sessionID]).passport.user);
-    const results=await Attempt.Result.find({QuizName:req.params.quizname});
+    const results=await Attempt.Result.find({QuizId:req.params.quizid});
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
     //console.log(userData.passport);
     if(!userData.passport){
