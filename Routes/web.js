@@ -52,7 +52,7 @@ router.get("/Student_dashboard",(req,res)=>{
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
     res.render("Student_Dashboard",{data:userData.passport.user._json});
 });
-router.get("/quizDetails/:quizid",async (req,res)=>{
+router.get("/quizDetails/:quizid/:quizname",async (req,res)=>{
     //console.log(JSON.parse(req.sessionStore.sessions[req.sessionID]).passport.user);
     const results=await Attempt.Result.find({QuizId:req.params.quizid});
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
@@ -61,7 +61,7 @@ router.get("/quizDetails/:quizid",async (req,res)=>{
         
         res.redirect("/");
     }else{  
-    res.render("QuizDetails",{data:userData.passport.user._json,details:results,quizname:req.params.quizname});
+    res.render("QuizDetails",{data:userData.passport.user._json,details:results,quizid:req.params.quizid,quizname:req.params.quizname});
     }
 });
 router.get('/auth/google/cb',passport.authenticate('google',{failureRedirect: '/',failureMessage:true }),(req,res)=>{
@@ -264,17 +264,18 @@ router.get("/studentDetails/:studentEmail/:quizname",async (req,res)=>{
     res.render("StudentDetails",{data:userData.passport.user._json,student:studentdata,title:studentdata.name,result:result,quiz:quiz});
     }
 })
-router.get("/deletequiz/:qname",async (req,res)=>{
+router.get("/deletequiz/:qid",async (req,res)=>{
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
     //console.log(req.params.qname,userData.passport.user._json.email);
     if(!userData.passport){
         res.redirect('/');
     }
-    else{ 
-    const data=await Quiz.findOne({$and:[{name:req.params.qname},{email:userData.passport.user._json.email}]});
+    else{
+    var id = mongoose.Types.ObjectId(req.params.qid); 
+    const data=await Quiz.findOne({_id:id});
     //console.log(data);
-    const StudentResults= await Attempt.Result.deleteMany({QuizId:data._id.toString()})
-    const result=await Quiz.deleteOne({$and:[{name:req.params.qname},{email:userData.passport.user._json.email}]});
+    const StudentResults= await Attempt.Result.deleteMany({QuizId:req.params.qid});
+    const result=await Quiz.deleteOne({_id:id});
     //console.log(result,StudentResults);
     res.redirect("/Admin_dashboard");
     }
