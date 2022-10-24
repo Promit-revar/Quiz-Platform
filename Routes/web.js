@@ -50,7 +50,11 @@ router.get("/createQuiz",(req,res)=>{
 router.get("/Student_dashboard",(req,res)=>{
     //console.log(JSON.parse(req.sessionStore.sessions[req.sessionID]).passport.user);
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
+    if(!userData.passport){
+        res.redirect("/");
+    } else{
     res.render("Student_Dashboard",{data:userData.passport.user._json});
+    }
 });
 router.get("/quizDetails/:quizid/:quizname",async (req,res)=>{
     //console.log(JSON.parse(req.sessionStore.sessions[req.sessionID]).passport.user);
