@@ -4,10 +4,15 @@
     <div class="row">
             
             
-        <div class="btn-group col">
+        <div class="btn-group col-2">
             <form action="/deletequiz/<%= quizid %>" method="get">
             <button class="btn btn-default btn-danger" type="submit"> Delete Quiz</button>
             </form>
+        </div>
+        <div class="btn-group col">
+            
+            <button class="btn btn-default btn-primary" type="button" id="copyLink"> Copy Quiz Link</button>
+            
         </div>
 
 <div class="col-md-12 mt-3">
@@ -30,15 +35,24 @@
 </div>
 <script>
     $(document).ready(()=>{
+        
         var quizes= <%- JSON.stringify(details) %>;
+        var quizdata=<%- JSON.stringify(quizdata) %>;
+        $('#copyLink').click(()=>{
+        
+        document.execCommand("copy");
+        
+        navigator.clipboard.writeText(quizdata.link);
+        });
         for(var i=0;i<quizes.length;i++){
+            
             var tbody=document.createElement('tbody');
             var encoded=encodeURIComponent(quizes[i].StudentEmail);
             tbody.innerHTML=`<tr  class="clickable text-center" 
                onclick="window.location='/studentDetails/${encoded}/${quizes[i].QuizName}'" style="cursor:pointer;">
                                 
                                     <th scope="row">${i+1}</th>
-                                    <td> ${quizes[i].StudentEmail}</td>
+                                    <td> ${quizes[i].StudentName}</td>
                                     <td>${quizes[i].StudentEmail}</td>
                                     <td>${quizes[i].Score}</td>
                                     <td>${quizes[i].Total}</td>

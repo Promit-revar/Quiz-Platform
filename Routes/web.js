@@ -55,13 +55,14 @@ router.get("/Student_dashboard",(req,res)=>{
 router.get("/quizDetails/:quizid/:quizname",async (req,res)=>{
     //console.log(JSON.parse(req.sessionStore.sessions[req.sessionID]).passport.user);
     const results=await Attempt.Result.find({QuizId:req.params.quizid});
+    const quizes=await Quiz.findOne({_id:mongoose.Types.ObjectId(req.params.quizid)});
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
-    //console.log(userData.passport);
+    //console.log(userData.passport.user._json);
     if(!userData.passport){
         
         res.redirect("/");
     }else{  
-    res.render("QuizDetails",{data:userData.passport.user._json,details:results,quizid:req.params.quizid,quizname:req.params.quizname});
+    res.render("QuizDetails",{data:userData.passport.user._json,details:results,quizid:req.params.quizid,quizname:req.params.quizname,quizdata:quizes});
     }
 });
 router.get('/auth/google/cb',passport.authenticate('google',{failureRedirect: '/',failureMessage:true }),(req,res)=>{
@@ -227,10 +228,11 @@ router.post("/submit/:name/:studentemail",async(req,res)=>{
     
     
     //console.log(answers)
-    
+    const Student_details=await User.findOne({email:req.params.studentemail});
     const result=await Attempt.Result.create({
         QuizName:correctAnswers.name,
         StudentEmail:req.params.studentemail,
+        StudentName: Student_details.name,
         QuizId:req.params.name,
         QuizLink: process.env.HOST+"/"+req.params.name,
         Answers: answers,
