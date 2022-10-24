@@ -168,7 +168,7 @@ router.post('/save',async (req,res)=>{
         }
     });
     
-    res.send(`<h1>link: ${quiz.link}</h1>`);
+    res.render("ShareLink",{link:quiz.link,QuizName:quiz.name});
     }
 });
 router.get("/attemptquiz/:name/:studentemail",async (req,res)=>{
