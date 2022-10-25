@@ -4,7 +4,7 @@
     <div class="row">
             
         <div class="col-0"><img src="<%= student.picture_url %>" style="border-radius: 50%;" class="p-3"></div>   
-        <div class=" col" >
+        <div class=" col" id="details" >
 
             Name: <%= student.name %>
             <br>
@@ -30,8 +30,16 @@
 </div>
 <script>
     var answers=<%- JSON.stringify(result) %>;
-    console.log(answers);
+    var student=<%- JSON.stringify(student) %>;
     var quiz=<%- JSON.stringify(quiz) %>;
+    //console.log(answers);
+    if(answers.Score==-1){
+        var reattempt=document.createElement('div');
+        reattempt.innerHTML=`<form action="/allow/${quiz._id.toString()}/${student.email}"><button type='submit' class='btn btn-default btn-success pull-right mr-3 mb-3'>Allow </button></form>`;
+        document.getElementById('details').append(reattempt);
+
+    }
+    
     $(document).ready(()=>{
         for(var i=0;i<answers.Answers.length;i++){
         var listitem=document.createElement('li');

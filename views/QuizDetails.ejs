@@ -59,6 +59,9 @@
                                 
                                
                             </tr> `;
+            if(quizes[i].Score==-1){
+                tbody.classList.add('table-danger');
+            }
             
             document.getElementById('detailTable').append(tbody);
         }

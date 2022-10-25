@@ -1,4 +1,95 @@
-<%- include('./components/nav.ejs',{data:profile,title:"dashboard"}) %>
+<%- include('./components/nav.ejs',{data:profile,title:"Quiz"}) %>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+ 
+<script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+<style>
+    .ui-dialog-titlebar-close {
+    visibility: hidden;
+}
+</style>
+<div id="dialogue" style="align-self: centre;" title="Note">
+    <p>
+        Please make sure that you are entering into fullscreen mode the change of tabs will be considered as a malpractice and on three warnings you will be directed out of the quiz environment.
+    </p>
+    <button id="fulsrc" class="btn btn-default btn-primary pull-right">Ok</button>
+</div>
+<div id="violation" style="align-self: centre;" title="Warning">
+    <p ><b class="text-danger">You have exited the Fullscreen mode!!</b><br><br><b>Note: On 3 violations in a single quiz will result in suspension from attempting quiz further!</b></p>
+    <button id="vfulsrc" class="btn btn-default btn-primary pull-right">Ok</button>
+</div>
     <%- include(`./partials/${title}.ejs`,{profile:profile}); %>
 </body>
+<script>
+    this.fullScreenMode = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen; 
+    var violations=0;
+    $(document).on ('mozfullscreenchange webkitfullscreenchange fullscreenchange',function(){
+       this.fullScreenMode = !this.fullScreenMode;
+
+     
+      if(!this.fullScreenMode){
+        violations+=1;
+        if(violations==3){
+            alert("you exceeded the number of allowed violations! Contact the admin for further details");
+            var violation=document.createElement('input');
+            violation.innerHTML="<input type='number' name='violation' value=1 style='{'display':none}'>";
+            document.getElementById("Quiz").append(violation);
+            $('#Quiz').submit();
+        }
+        $("#violation").dialog({
+            autoOpen: true,
+            closeOnEscape: false,  
+            width: 700,
+            height: 240,
+            modal : true,
+            
+        });
+
+        //var result=confirm("Entering Fullscreen Mode");
+        //console.log(result);
+       $('#vfulsrc').click(()=>{
+        var elem=document.documentElement;
+        //console.log(elem.requestFullscreen)
+
+        if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) { /* Safari */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE11 */
+    elem.msRequestFullscreen();
+  }
+  $('#violation').dialog('close');
+    });
+}
+        });
+    $(document).ready(()=>{
+        $('#violation').css({"display":"none"})
+        $("#dialogue").dialog({
+            autoOpen: true,
+            closeOnEscape: false,  
+            width: 700,
+            height: 220,
+            modal : true,
+            
+        } );
+
+        //var result=confirm("Entering Fullscreen Mode");
+        //console.log(result);
+       $('#fulsrc').click(()=>{
+        var elem=document.documentElement;
+        //console.log(elem.requestFullscreen)
+
+        if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) { /* Safari */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE11 */
+    elem.msRequestFullscreen();
+  }
+  $('#dialogue').dialog('close');
+})
+
+    })
+</script>
 </html>

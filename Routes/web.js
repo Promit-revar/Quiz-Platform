@@ -183,26 +183,33 @@ router.get("/attemptquiz/:name/:studentemail",async (req,res)=>{
         res.redirect('/');
     }
     else{
+    
+    const attempted=await Attempt.Result.findOne({$and:[{QuizId:req.params.name},{StudentEmail:req.params.studentemail}]});
+    if(attempted){
+       
+        res.status(401).send("<h1>You have already Attempted this quiz!</h1>");
+    }
+    else{
+    
         var email=req.params.studentemail;
         res.render('Quiz_link',{title:req.params.name,profile:userData.passport.user._json});
+    }
     }
 });
 router.post("/submit/:name/:studentemail",async(req,res)=>{
     var userData=JSON.parse(req.sessionStore.sessions[req.sessionID]);
     var answers=new Array();
+    //console.log(req.body);
     if(!userData.passport){
         res.redirect('/');
     }else{ 
     //console.log(userData.passport.user._json);
     try{
-    const attempted=await Attempt.Result.findOne({$and:[{QuizId:req.params.name},{StudentEmail:req.params.studentemail}]});
-    if(attempted){
-       
-        res.status(401).send({success:false,error:"You have already Attempted this quiz!"});
-    }
-    else{
+    
+   
     const correctAnswers=await Quiz.findOne({_id:mongoose.Types.ObjectId(req.params.name)});
     var marks=0,total=0;
+    
     //console.log(correctAnswers);
     var size=1;
     if(Array.isArray(req.body.QT)){
@@ -233,6 +240,11 @@ router.post("/submit/:name/:studentemail",async(req,res)=>{
     
     //console.log(answers)
     const Student_details=await User.findOne({email:req.params.studentemail});
+    if(req.body.violation){
+        
+        marks=-1;
+    }
+    
     const result=await Attempt.Result.create({
         QuizName:correctAnswers.name,
         StudentEmail:req.params.studentemail,
@@ -245,12 +257,14 @@ router.post("/submit/:name/:studentemail",async(req,res)=>{
     });
     result.save();
     
+   
+    
     res.render("Student_result",{data:userData.passport.user._json,marks:{score:marks,total:total,name:req.params.name}});
     
     }
     
     //res.status(200).send({success:true,message:`Your Response for ${req.params.name} has been submitted successfully`, score:`${result.Score}/${result.Total}`});
-    }
+    
     catch(err){
         console.log(err);
         res.status(500).sendFile(path.join(__dirname,"../public/Error.html"));
@@ -286,6 +300,11 @@ router.get("/deletequiz/:qid",async (req,res)=>{
     res.redirect("/Admin_dashboard");
     }
 });
+router.get("/allow/:qid/:email",async(req,res)=>{
+    const result=await Attempt.Result.findOneAndDelete({$and:[{QuizId:req.params.qid},{StudentEmail:req.params.email}]});
+    res.redirect(`/quizDetails/${req.params.qid}/${result.QuizName}`);
+
+})
 router.get("/logout",(req,res)=>{
     req.session.destroy();
     localStorage.clear();

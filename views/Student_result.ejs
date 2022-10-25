@@ -1,11 +1,12 @@
 <%- include('./components/nav.ejs',{data:data,title:"Result"}) %>
+
     <div class="row mt-3">
         <div class="col"></div>
-        <div class="col-xs-8"><h3 align="center" class="text-success" >Thank you for attempting the test</h3><br><h2 align="center">Score: <%= marks.score %> / <%= marks.total %> </h2><br><p class="text-danger"><b>Note:</b>&nbsp; The score is calculated only for the <b>MCQ</b> type questions while the marks for <b>short text</b> type of questions is not included in the score! </p></div>
+        <div class="col-xs-8"><h3 align="center" class="text-success" >Thank you for attempting the test</h3><br><h2 align="center">Score: <%= marks.score %> / <%= marks.total %> </h2><br><p class="text-danger"><b>Note:</b>&nbsp; The score is calculated only for the <b>MCQ</b> type questions while the marks for <b>short text</b> type of questions is not included in the score!<br><br> If your score is showing up as -1 then you are involved in malpractice for reattempt kindly contact the admin who created the quiz. </p></div>
         <div class="col"></div>
          
     </div>
     
-        
+   
 </body>
 </html>
